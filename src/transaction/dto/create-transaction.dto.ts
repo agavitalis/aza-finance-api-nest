@@ -17,7 +17,7 @@ export class CreateTransactionDto {
     @IsNumber()
     @IsNotEmpty()
     public inputAmount: number;
-
+    
     @ApiProperty({
         description: 'The Input Amount Currency',
         example: 'NGN',

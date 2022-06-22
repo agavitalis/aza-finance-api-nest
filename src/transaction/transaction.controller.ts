@@ -1,17 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { ApiTags } from '@nestjs/swagger';
-
+import { validate } from 'class-validator';
 @ApiTags('Transaction')
 @Controller('transaction')
 export class TransactionController {
-  constructor(private readonly transactionService: TransactionService) {}
+  constructor(private readonly transactionService: TransactionService) { }
 
   @Post()
   async create(@Body() createTransactionDto: CreateTransactionDto) {
 
+    validate(createTransactionDto).then(errors => {
+      // errors is an array of validation errors
+      if (errors.length > 0) {
+        throw new HttpException(`Validation Error: ${errors}`, HttpStatus.BAD_REQUEST)
+      }
+    });
     const transaction = await this.transactionService.create(createTransactionDto);
 
     return {
@@ -35,7 +41,7 @@ export class TransactionController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
 
-    const transaction =  this.transactionService.findOne(id);
+    const transaction = await this.transactionService.findOne(id);
 
     return {
       message: 'Transaction successfully found',
@@ -59,7 +65,7 @@ export class TransactionController {
   async remove(@Param('id') id: string) {
 
     const transaction = await this.transactionService.remove(id);
-    
+
     return {
       message: 'Transaction removed',
       data: transaction

@@ -32,7 +32,8 @@ export class TransactionService {
   }
 
   async findOne(id: any): Promise<Transaction> {
-    const transaction = await this.transactionRepository.findOne(id);
+   
+    const transaction = await this.transactionRepository.findOneBy({id:id});
 
     if (!transaction) {
       throw new HttpException(`Transaction with id: ${id} not found`, HttpStatus.NOT_FOUND)
@@ -43,7 +44,7 @@ export class TransactionService {
 
   async update(updateTransactionDto: UpdateTransactionDto) {
 
-    let transaction = await this.transactionRepository.findOne(updateTransactionDto.id as any);
+    let transaction = await this.transactionRepository.findOneBy({id:updateTransactionDto.id as any});
 
     if (!transaction) {
       throw new HttpException(`Transaction with id: ${updateTransactionDto.id} not found`, HttpStatus.NOT_FOUND)
@@ -56,7 +57,7 @@ export class TransactionService {
 
   async remove(id: any) {
 
-    const transaction = await this.transactionRepository.findOne(id);
+    const transaction = await this.transactionRepository.findOneBy({id:id});
 
     if (!transaction) {
       throw new HttpException(`Transaction with id: ${id} already deleted`, HttpStatus.NOT_FOUND)
