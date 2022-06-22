@@ -11,13 +11,6 @@ export class TransactionController {
 
   @Post()
   async create(@Body() createTransactionDto: CreateTransactionDto) {
-
-    validate(createTransactionDto).then(errors => {
-      // errors is an array of validation errors
-      if (errors.length > 0) {
-        throw new HttpException(`Validation Error: ${errors}`, HttpStatus.BAD_REQUEST)
-      }
-    });
     const transaction = await this.transactionService.create(createTransactionDto);
 
     return {

@@ -31,6 +31,7 @@ async function bootstrap() {
   
   // Server Listening on port
   const PORT = config.PORT || 5000;
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(PORT);
   console.log("Server listening to http://localhost:"+PORT)
 }
